@@ -1014,13 +1014,7 @@
             window.speechSynthesis.cancel();
             currentLang = lang;
             renderLesson();
-            
-            // Update the UI text
-            const slide = sessionSlides[currentIndex];
-            const textElement = document.getElementById('discussion-text');
-            if (textElement) {
-                textElement.innerHTML = typeof slide.discussion === 'object' ? slide.discussion[lang] : slide.discussion;
-            }
+        
             
             if (lang === 'en') {
         playSpeech(slide.discussion);
