@@ -1013,6 +1013,7 @@
         function setLanguageAndRead(lang) {
             window.speechSynthesis.cancel();
             currentLang = lang;
+            renderLesson();
             
             // Update the UI text
             const slide = sessionSlides[currentIndex];
@@ -1024,7 +1025,7 @@
             if (lang === 'en') {
         playSpeech(slide.discussion);
         }
-        }
+    }
         
         function handleTap(text) {
             tapCount++;
