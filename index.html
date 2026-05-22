@@ -347,7 +347,7 @@
             {
                 title: "Explaining Waves",
                 discussion: {
-                    en: "Part A. Sound Waves <br>Looking closer at Mechanical Waves, they move in two ways: Transverse, where particles move up and down like ocean waves, and Longitudinal, where particles move back and forth in compression, just like sound waves. Speaking of sound, it is produced purely by vibrations. It travels fastest in solids because the molecules are close together, and slowest in gases. Remember, the pitch of a sound depends on its frequency, while the loudness depends on the amplitude. This is how we hear: vibrations enter the ear, hit the eardrum, and send signals to our brain. <br><br> Part B. Light Waves <br>Now, let us talk about Light. Light is a form of electromagnetic radiation that travels in straight lines. It has unique behaviors: it can bounce off objects which is called reflection, bend when entering different materials which is refraction, or be taken in which is absorption. What we see as white light is actually a mixture of all colors. The process of sight happens when light enters our eyes, the lens focuses it on the retina, and converts it into signals that our brain interprets. <br><br> Part C. Electromagnetic Waves<br>All electromagnetic waves are arranged according to their energy and frequency in what we call the Electromagnetic Spectrum. On the low energy end, we have Radio waves, Microwaves, and Infrared. In the middle is Visible Light—the only part we can actually see. On the high energy end, we have Ultraviolet, X-rays, and Gamma rays. The rule here is simple: the higher the frequency, the higher the energy, which means they are also more powerful and potentially dangerous.",
+                    en: "Part A. Sound Waves <br>Looking closer at Mechanical Waves, they move in two ways: First, transverse - where particles move up and down like ocean waves.<br>[media-1]<br><br> Second, Longitudinal - where particles move back and forth in compression, just like sound waves<br> [media-2]<br><br>. Speaking of sound, it is produced purely by vibrations. It travels fastest in solids because the molecules are close together, and slowest in gases. Remember, the pitch of a sound depends on its frequency, while the loudness depends on the amplitude. This is how we hear: vibrations enter the ear, hit the eardrum, and send signals to our brain. <br><br> Part B. Light Waves <br>Now, let us talk about Light. Light is a form of electromagnetic radiation that travels in straight lines. It has unique behaviors: it can bounce off objects which is called reflection, bend when entering different materials which is refraction, or be taken in which is absorption. What we see as white light is actually a mixture of all colors. The process of sight happens when light enters our eyes, the lens focuses it on the retina, and converts it into signals that our brain interprets. <br><br> Part C. Electromagnetic Waves<br>All electromagnetic waves are arranged according to their energy and frequency in what we call the Electromagnetic Spectrum. On the low energy end, we have Radio waves, Microwaves, and Infrared. In the middle is Visible Light—the only part we can actually see. On the high energy end, we have Ultraviolet, X-rays, and Gamma rays. The rule here is simple: the higher the frequency, the higher the energy, which means they are also more powerful and potentially dangerous.",
                     fil: ""
                 },
                     assets: [
@@ -855,33 +855,39 @@
             else if (view === 'lesson') renderLesson();
         }
 
+
+        
         function renderLesson() {
     const container = document.getElementById('main-content');
     const slide = sessionSlides[currentIndex];
     
-    let mediaHtml = '';
+    // 1. Get the current raw text content
+    let textContent = typeof slide.discussion === 'object' ? slide.discussion[currentLang] : slide.discussion;
+    
+    // 2. Safely swap media placeholders [media-0], [media-1], etc., into HTML structures natively inside the text
     if (slide.assets && slide.assets.length > 0) {
-        mediaHtml = slide.assets.map(asset => {
+        slide.assets.forEach((asset, index) => {
+            let assetHtml = '';
             if (asset.type === 'video') {
-                return `<div class="media-container"><iframe src="${asset.url}" frameborder="0" allowfullscreen></iframe></div>`;
+                assetHtml = `<div class="media-container"><iframe src="${asset.url}" frameborder="0" allowfullscreen></iframe></div>`;
             } else if (asset.type === 'image') {
-                return `
+                assetHtml = `
                     <div class="media-container">
                         <img src="${asset.url}" alt="Slide Visual">
-                        <div style="text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 0.9rem; font-style: italic;">
-                            ${asset.title || ''} 
-                        </div>
+                        ${asset.title ? `<div style="text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 0.9rem; font-style: italic;">${asset.title}</div>` : ''}
                     </div>`;
             }
-            return '';
-        }).join('');
+            
+            // Replace the placeholder string with the true visual object markup
+            textContent = textContent.replace(`[media-${index}]`, assetHtml);
+        });
     }
     
-        const musicLabel = userWantsMusic ? 'PAUSE' : 'PLAY';
+    const musicLabel = userWantsMusic ? 'PAUSE' : 'PLAY';
             
-     container.innerHTML = `
+    container.innerHTML = `
         <div id="lesson-scoreboard" style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px;">
                 <button onclick="setLanguageAndRead('en')" style="background: #3b82f6; color: white; padding: 8px 12px; font-size: 0.9rem;">ENGLISH</button>
                 <button onclick="setLanguageAndRead('fil')" style="background: #10b981; color: white; padding: 8px 12px; font-size: 0.9rem;">FILIPINO</button>
             </div>
@@ -896,11 +902,11 @@
         </div>
 
         <h1>${slide.title}</h1>
-            <div class="discussion-box" onclick="handleTap(sessionSlides[currentIndex].discussion)">
-                  <p id="discussion-text" style="font-size: 1.3rem;">
-                ${typeof slide.discussion === 'object' ? slide.discussion[currentLang] : slide.discussion}
-            </p>
-            ${mediaHtml}
+        
+        <div class="discussion-box" onclick="handleTap(sessionSlides[currentIndex].discussion)">
+            <div id="discussion-text" style="font-size: 1.3rem; line-height: 1.6;">
+                ${textContent}
+            </div>
         </div>
 
         <div id="questions-modal" class="modal">
@@ -919,11 +925,11 @@
     `;
     renderQuestions();
 }
+
     
     
 
-        // --- TTS and Tap Logic ---
-        
+        // --- TTS and Tap Logic ---  
     function stripHtml(html) {
             return html.replace(/<[^>]*>/g, ' ');
         }
@@ -944,6 +950,7 @@
     
     // FIX: Remove HTML tags only, preserve Filipino punctuation and structure
     let cleanText = stripHtml(rawText)
+        .replace(/\[media-\d+\]/gi, '')
         .replace(/\[.*?\]/g, '') // Remove [bracketed annotations]
         .replace(/\s+/g, ' ')    // Collapse extra spaces
         .trim();
