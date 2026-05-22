@@ -1014,6 +1014,11 @@
             window.speechSynthesis.cancel();
             currentLang = lang;
             renderLesson();
+
+            
+            if (textElement) {
+                textElement.innerHTML = typeof slide.discussion === 'object' ? slide.discussion[lang] : slide.discussion;
+            }
         
             
             if (lang === 'en') {
