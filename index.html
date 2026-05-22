@@ -924,57 +924,101 @@
 
         // --- TTS and Tap Logic ---
         
-        function stripHtml(html) {
-            // Replaces HTML tags with a space so the TTS doesn't read "br" etc.
+    function stripHtml(html) {
             return html.replace(/<[^>]*>/g, ' ');
         }
 
-        function playSpeech(text) {
-    // If already speaking, clicking again stops the voice and resumes music
+        
+    function playSpeech(text) {
+    // 1. Check if already speaking: If yes, cancel and resume music
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
-        
         if (userWantsMusic && ytPlayer) {
             ytPlayer.playVideo();
         }
         return;
     }
 
-    // Apply cleaning: Remove HTML tags and bracketed content, then normalize spaces
-    const cleanText = stripHtml(text)
-        .replace(/\[.*?\]/g, '') // Removes bracketed text like [Image description]
-        .replace(/\s+/g, ' ')    // Removes extra whitespace/newlines
+    // 2. Extract and Clean Text
+    let rawText = typeof text === 'object' ? text[currentLang] : text;
+    
+    // FIX: Remove HTML tags only, preserve Filipino punctuation and structure
+    let cleanText = stripHtml(rawText)
+        .replace(/\[.*?\]/g, '') // Remove [bracketed annotations]
+        .replace(/\s+/g, ' ')    // Collapse extra spaces
         .trim();
 
-    // Prevent errors if the cleaned text is empty
     if (!cleanText) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.rate = 0.8;
-            utterance.volume = 1.0;
-            utterance.pitch = 1.0;
-    
-    // Pause background music while the voice reads
-    if (ytPlayer) {
+        
+        if (ytPlayer && userWantsMusic) {
         ytPlayer.pauseVideo();
     }
 
-    // Resume background music when speech finishes
+    // 3. Setup Utterance
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // 4. Voice & Accent Logic - FIXED for Filipino
+    const voices = window.speechSynthesis.getVoices();
+    
+    if (currentLang === 'fil') {
+        return;
+        
+    } else {
+        // English settings
+        const englishVoice = voices.find(voice => 
+            voice.lang.includes('en-US') || 
+            voice.lang.includes('en-GB')
+        );
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+    }
+
+    utterance.volume = 1.0;
+
+    // 5. Music Integration
+    if (ytPlayer && userWantsMusic) {
+        ytPlayer.pauseVideo();
+    }
+
+    // 6. Event Listeners
     utterance.onend = function() {
         if (userWantsMusic && ytPlayer) {
             ytPlayer.playVideo();
         }
     };
 
-    // Resume background music if speech fails
-    utterance.onerror = function() {
+    utterance.onerror = function(event) {
+        console.error("TTS Error:", event.error);
         if (userWantsMusic && ytPlayer) {
             ytPlayer.playVideo();
         }
     };
 
+    // 7. Execute
     window.speechSynthesis.speak(utterance);
 }
+    
+
+        function setLanguageAndRead(lang) {
+            window.speechSynthesis.cancel();
+            currentLang = lang;
+            
+            // Update the UI text
+            const slide = sessionSlides[currentIndex];
+            const textElement = document.getElementById('discussion-text');
+            if (textElement) {
+                textElement.innerHTML = typeof slide.discussion === 'object' ? slide.discussion[lang] : slide.discussion;
+            }
+            
+            if (lang === 'en') {
+        playSpeech(slide.discussion);
+        }
+        }
+        
         function handleTap(text) {
             tapCount++;
             if (tapCount === 1) {
