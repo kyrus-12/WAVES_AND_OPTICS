@@ -869,7 +869,11 @@
         slide.assets.forEach((asset, index) => {
             let assetHtml = '';
             if (asset.type === 'video') {
-                assetHtml = `<div class="media-container"><iframe src="${asset.url}" frameborder="0" allowfullscreen></iframe></div>`;
+            assetHtml = `
+                <div class="media-container">
+                    <iframe src="${asset.url}" frameborder="0" allowfullscreen></iframe>
+                    ${asset.title ? `<div style="text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 0.9rem; font-style: italic;">${asset.title}</div>` : ''}
+                </div>`;
             } else if (asset.type === 'image') {
                 assetHtml = `
                     <div class="media-container">
