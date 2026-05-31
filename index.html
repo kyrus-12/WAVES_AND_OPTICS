@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>WAVES AND OPTICS</title>
+    <style>
+        :root {
+            --bg-color: #fdfaf2;        /* Elegant soft cream tint (very gentle on the eyes) */
+            --glass-bg: #ffffff;        /* Clean pure white for content containers */
+            --text-color: #3e2723;      /* Deep espresso brown for readable main headings */
+            --border: 1px solid #e1d7c6; /* Subtle warm beige border line separations */
+            --highlight: #b5651d;       /* Warm bronze-brown for selections and highlights */            
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: beige; 
+            font-family: 'Segoe UI', sans-serif; 
+            min-height: 100vh; margin: 0; 
+            display: flex; flex-direction: column; align-items: center; 
+            /* This line prevents browser double-tap zoom */
+            touch-action: manipulation;
+        }
+
+        nav { width: 100%; height: 5vh; text-align: center; background: #3e2723; border-bottom: var(--border); margin-bottom: 20px; 
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;   
+            position: relative;
+        }
+    
+        nav a { color: #ffffff; margin-right:20px; margin-left: 20px; text-decoration: none; cursor: pointer; font-weight: bold; }
+    
+    
+    .nav-logo {
+    position: absolute;
+    right: 10px;               /* Locks it securely against the right screen margin */
+    height: 80px;              /* Standard elegant height constraint */
+    width: auto;               /* Retains the original proportions safely */
+    object-fit: contain;
+    }
+    
+        /* Custom spacing and typography specifically for the Home screen text */
+.home-content {
+    font-size: 1.25rem;       /* Controls the text size */
+    line-height: 1.8;         /* Controls vertical spacing between lines */
+    letter-spacing: 0.3px;    /* Optional: Controls the spacing between letters */
+    margin-top: 20px;         /* Creates a gap below the main heading title */
+    text-align: justify;      /* Makes paragraph edges clean and aligned on both sides */
+    color: black;
+}
+
+/* Controls the gap between consecutive paragraph blocks on the Home screen */
+.home-content p {
+    margin-bottom: 24px;      /* Creates comfortable spacing between paragraphs */
+}
+    
+    /* Custom spacing and typography specifically for the About Us screen text */
+.about-content {
+    font-size: 1.25rem;       /* Controls the text size */
+    line-height: 1.8;         /* Controls vertical spacing between lines of sentences */
+    letter-spacing: 0.3px;    /* Enhances readability */
+    margin-top: 20px;         /* Creates a gap below the "About Us" heading title */
+    text-align: justify;      /* Aligns sentence edges nicely on both sides */
+    color: black;
+}
+
+/* Controls the gap between consecutive paragraph blocks on the About Us screen */
+.about-content p {
+    margin-bottom: 24px;      /* Creates comfortable spacing between paragraphs */
+}
+    
+    
+        #app { 
+            width: 90vw; max-width: 1000px; padding: 40px; margin-bottom: 40px; 
+            background: var(--glass-bg); backdrop-filter: blur(15px); 
+            border-radius: 30px; border: var(--border); position: relative;
+        }
+
+        #lesson-scoreboard { 
+            text-align: right; color: var(--text-color); margin-bottom: 20px; font-weight: bold; 
+            border-bottom: var(--border); padding-bottom: 10px; display: flex; 
+            justify-content: space-between; align-items: center; 
+        }
+
+        h1 { color: var(--text-color); font-size: 2.2rem; margin-top: 0; }
+        
+        /* Media Containers */
+        .media-container { width: 100%; margin: 20px 0; border-radius: 15px; overflow: hidden; border: var(--border); }
+        .media-container iframe { width: 100%; height: 400px; display: block; }
+        .media-container img { width: 100%; height: auto; display: block; }
+        
+        .discussion-box { padding: 20px; margin-bottom: 20px; cursor: pointer; font-size: 1.25rem; text-align: justify; letter-spacing: 0.3px;}
+
+        /* References Styling */
+        .references-page-box { padding: 20px; background: rgba(0,0,0,0.2); border-radius: 15px; border-left: 4px solid var(--text-color); }
+        #ref-list { list-style: square; padding-left: 20px; color: black; line-height: 1.8; }
+
+        button { padding: 15px; background: rgba(255, 255, 255, 0.1); color: black; border: var(--border); border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+        button:hover:not(:disabled) { background: plum; color: black; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; border: 1px solid #555; }
+        
+        button.selected { border: 2px solid var(--highlight); background: rgba(250, 204, 21, 0.2); }
+        
+        .btn-trigger { width: 100%; background: #5d4037; margin-top: 10px; }
+        #questions-section { display: none; margin-top: 20px; }
+        .question-block { margin-bottom: 20px; background: white; padding: 20px; border-radius: 15px; color: black;}
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; background: transparent;}
+        .options-grid button {
+            font-size: 1.2rem !important; 
+            text-align: left;
+        }
+        
+        footer { 
+    margin-top: auto; 
+    padding: 20px; 
+    opacity: 1;                 /* Changed from 0.8 to 1 so the text color is crisp and readable */
+    text-align: center; 
+    border-top: 1px solid #ffd8bf;; /* Matches the header line separation border exactly */
+    width: 100%; 
+    box-sizing: border-box;     /* Prevents horizontal scrollbars on mobile viewports */
+    background: #3e2723;        /* Rich dark maroon background matching the header exactly */
+    color: #ffffff;             /* Crisp white text for absolute contrast */
+}
+    
+    /* Modal Styling */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.8); /* Darken background */
+    backdrop-filter: blur(5px);
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.modal-content {
+    background-color: pink;
+    margin: 5% auto;
+    padding: 20px;
+    border: var(--border);
+    width: 80%;
+    max-height: 80vh;
+    overflow-y: auto; /* Scroll if many questions */
+    border-radius: 20px;
+}
+
+.close-modal {
+    color: var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+    
+    .media-container div {
+    border-top: var(--border);
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+    
+    
+    /* Music Control Button */
+.music-btn {
+    background: white; /* Warm medium brown */
+    color: black;
+    border: var(--border);
+    border-radius: 30%;
+    width: 60px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.music-btn:hover {
+    background: #fdfaf2;
+    color: black;
+}
+
+/* Hidden YouTube Player Container */
+#yt-background-player {
+    display: none;
+}
+    
+        .push-right {
+    margin-left: auto;
+}
+
+        /* Styling for option buttons when answered */
+button.correct-choice {
+    background-color: green !important; /* Vivid Green */
+    border-color: green !important;
+    color: white !important;
+}
+
+button.incorrect-choice {
+    background-color: red !important; /* Vivid Red */
+    border-color: red !important;
+    color: white !important;
+}
+        
+    </style>
+</head>
+<body>
+    
+    <div id="yt-background-player"></div>
+
+    <nav>
+        <a onclick="renderView('home')">HOME</a>
+        <a onclick="renderView('lesson')">LESSON</a>
+        <a onclick="renderView('references')">REFERENCES</a>
+        <a onclick="renderView('about')">ABOUT</a>
+        <img src="https://imgur.com/AMG0rxo.jpg" alt="Logo" class="nav-logo">
+    </nav>
+
+    <div id="app">
+        <div id="main-content"></div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 AIGHAM | Prepared and modified by John Renz I. Vertudazo</p>
+    </footer>
+
+    <script>
+        const slides = [
+            {
+                title: "Introduction",
+                discussion: {
+                    en: "To start our lesson, I want you to imagine I am playing music and shining a light at the same time. What is actually traveling from the source to reach your eyes and ears? You might say it is energy, but specifically, it travels in the form of waves. Simply put, a wave is a disturbance that transfers energy from one place to another without moving matter itself. Just like ripples in water or the signals from a radio, waves are all around us.<br><br>[media-0]<br>[media-1]<br>[media-2]",
+                    fil: "<br>[media-0]<br>[media-1]<br>[media-2]"
+                },
+                    assets: [
+                    { type: 'image', url: 'https://i.imgur.com/fQ9k2cu.gif', title: 'A Woman Playing Instrument'},
+                    { type: 'image', url: 'https://i.imgur.com/iTdeECq.gif', title: 'Light Flashing From a Computer'},
+                        { type: 'video', url: 'https://www.youtube.com/embed/N7MQt703HDw', title: 'What are Waves?'},
+                        
+                ],
+                references: ["Valadares, R. (2020, September). carolynnyoe. Pinterest. https://br.pinterest.com/pin/819584832182025259/", "Light. (2025). Light GIFs | Tenor. Tenor. https://tenor.com/search/light-gifs", "https://youtu.be/N7MQt703HDw?si=PkC6wH0eM-879VNN"],
+                questions: [
+                    { q: "When you listen to music from a speaker and see light from a lamp, what exactly travels from the source to reach you?", 
+                        options: [
+                        {t:"Sound and light particles", c:false},
+                        {t:"Matter and energy", c:false}, 
+                        {t:"Energy in the form of waves", c:true},
+                        {t:"Air and light rays", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "Which of the following best defines a wave?", 
+                        options: [
+                        {t:"A movement of matter from one place to another", c:false},
+                        {t:"A disturbance that transfers energy without transferring matter", c:true}, 
+                        {t:"A force that pushes objects away from a source", c:false},
+                        {t:"A type of energy that stays in one place", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "When you throw a stone into a calm pond, ripples spread outward. What happens to the water molecules as the ripples pass?", 
+                        options: [
+                        {t:"They move all the way to the edge of the pond", c:false},
+                        {t:"They sink to the bottom of the pond", c:false}, 
+                        {t:"They move up and down but stay in roughly the same place", c:true},
+                        {t:"They disappear once the ripple passes", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "A radio station sends signals to your radio at home. What is being transferred from the station to your radio?", 
+                        options: [
+                        {t:"Sound waves directly from the station", c:false},
+                        {t:"Air particles carrying sound", c:false}, 
+                        {t:"Energy through electromagnetic waves", c:true},
+                        {t:"Radio equipment parts", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "Which real-life example best shows the main characteristic of a wave?", 
+                        options: [
+                        {t:"A ball rolling down a hill", c:false},
+                        {t:"A car moving from one city to another", c:false}, 
+                        {t:"A vibration traveling along a stretched rope when you shake one end", c:true},
+                        {t:"Water flowing in a river from mountains to sea", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "Light reaches Earth from the Sun. What travels across space to get here?", 
+                        options: [
+                        {t:"Tiny particles of the Sun", c:false},
+                        {t:"Heat and air", c:false}, 
+                        {t:"Energy in the form of light waves", c:true},
+                        {t:"Nothing, light just appears", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "When you speak to a friend standing nearby, how does your voice reach them?", 
+                        options: [
+                        {t:"Your breath travels to their ears", c:false},
+                        {t:"Sound waves carry energy through the air", c:true}, 
+                        {t:"You send invisible particles of your voice", c:false},
+                        {t:"The air moves from your mouth to their ear", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "Which statement is TRUE about waves?", 
+                        options: [
+                        {t:"Waves always need solid matter to travel", c:false},
+                        {t:"Waves transfer energy, not matter", c:true}, 
+                        {t:"All waves look exactly like water ripples", c:false},
+                        {t:"Waves can only be seen, not heard", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "You see a flash of lightning, then hear thunder a few seconds later. What do light and sound have in common here?", 
+                        options: [
+                        {t:"Both move matter from the cloud to you", c:false},
+                        {t:"Both travel as waves carrying energy", c:true}, 
+                        {t:"Both are exactly the same type of wave", c:false},
+                        {t:"Both travel at the same speed", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                    { q: "If you shake one end of a long spring or Slinky, a pulse moves to the other end. What is moving along the Slinky?", 
+                        options: [
+                        {t:"The coils of the Slinky", c:false},
+                        {t:"Energy in the form of a wave", c:true}, 
+                        {t:"Your hand movement", c:false},
+                        {t:"Air trapped inside", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                
+                ]
+            },
+            {
+                title: "Types of Waves",
+                discussion: {
+                    en: "Now, let’s think about how these waves travel. Some waves need a material or a 'medium' like solid, liquid, or gas to move, while others do not. This leads us to the two main categories: Mechanical Waves and Electromagnetic Waves. <br><b>Mechanical waves</b>, like sound, require particles to bump into each other, so they cannot travel through empty space or a vacuum.<br><br>[media-0]<br><br><br> On the other hand, <b>Electromagnetic waves</b>, like light, are special because they can travel through space and do not need any medium at all.<br><br>[media-1]<br>[media-2]",
+                    fil: "<br>[media-0] <br>[media-1] <br>[media-2]"
+                },
+                    assets: [
+                    { type: 'image', url: 'https://i.imgur.com/2Aj9yWA.gif', title: 'Mechanical Wave' },
+                    { type: 'image', url: 'https://i.imgur.com/qNoGGbs.gif', title: 'Electromagnetic Wave' },
+                        { type: 'video', url: 'https://www.youtube.com/embed/btNvr8KAQyM', title: 'Mechanical Waves versus Electromagnetic Waves'},
+                ],
+                references: ["The Physics Classroom. (2019). Sound is a Mechanical Wave. Physicsclassroom.com. https://www.physicsclassroom.com/class/sound/Lesson-1/Sound-is-a-Mechanical-Wave", "Electromagnetic Waves - Introduction to Electromagnetism - RMCybernetics. (2017, April 6). Custom Electronics, PWM Circuits, Induction Heating, and DIY Science Projects. https://www.rmcybernetics.com/science/physics/electromagnetism/electromagnetic-waves", "https://youtu.be/btNvr8KAQyM?si=xLl0BdiCzBgZhsK9"],
+                questions: [
+                { q: "You are watching a live broadcast from the Moon on TV. The video and signal reach Earth successfully, but the astronauts cannot hear each other talk unless they use radios. Why is this?", 
+                        options: [
+                        {t:"Moon’s gravity blocks sound waves but lets signals pass", c:false},
+                        {t:"Radio signals are stronger than sound waves in space", c:false}, 
+                        {t:"Sound needs a medium to travel; signals are electromagnetic and do not", c:true},
+                        {t:"Sound travels too slowly to reach anyone there", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which pair correctly groups a mechanical wave and an electromagnetic wave respectively?", 
+                        options: [
+                        {t:"X-ray and Water ripple", c:false},
+                        {t:"Sunlight and Ultraviolet ray", c:false}, 
+                        {t:"Sound from a bell and Light from a bulb", c:true},
+                        {t:"Radio wave and Earthquake wave", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You place a ringing alarm clock inside a glass jar and slowly pump all the air out. What happens as air is removed?", 
+                        options: [
+                        {t:"The sound becomes louder, but you cannot see the clock", c:false},
+                        {t:"Sound stays the same, but light fades away", c:false}, 
+                        {t:"The sound gradually fades until it disappears completely", c:true},
+                        {t:"You still hear it clearly, but it looks dimmer", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which statement correctly describes the main difference between the two wave categories?", 
+                        options: [
+                        {t:"One carries energy; the other carries matter", c:false},
+                        {t:"One requires a medium; the other can travel through a vacuum", c:true}, 
+                        {t:"One is visible; the other is always invisible", c:false},
+                        {t:"One travels fast; the other always moves very slowly", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "During an earthquake, two types of waves reach us: P-waves and S-waves. These can move through the ground, water, or solid rock, but not through empty space. How are these waves classified?", 
+                        options: [
+                        {t:"As electromagnetic waves", c:false},
+                        {t:"As mechanical waves", c:true}, 
+                        {t:"As both types combined", c:false},
+                        {t:"Neither of the two categories", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You are underwater in a swimming pool and hear someone tapping the side of the pool. You also see them tap. Why can you hear it clearly even while submerged?", 
+                        options: [
+                        {t:"Sound travels well through water, which acts as a medium", c:true},
+                        {t:"Water turns sound into an electromagnetic wave", c:false}, 
+                        {t:"Sound does not actually need any material to move", c:false},
+                        {t:"Water stops light but allows sound to pass only", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which of the following proves that electromagnetic waves do not need a medium?", 
+                        options: [
+                        {t:"You can feel heat when standing near a fire", c:false},
+                        {t:"Sunlight reaches us across the empty space between Sun and Earth", c:true}, 
+                        {t:"You can see your reflection clearly in a mirror", c:false},
+                        {t:"Radio works better inside closed rooms", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "A student lists examples of waves. Which list contains ONLY mechanical waves?", 
+                        options: [
+                        {t:"Light, Radio wave, X-ray", c:false},
+                        {t:"Sound, Microwave, Water wave", c:false}, 
+                        {t:"Sound, Water ripple, Seismic wave", c:true},
+                        {t:"Infrared, Ultraviolet, Sound", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "If you were standing in outer space with no spacesuit (hypothetically), what would happen regarding sound and light from a nearby explosion?", 
+                        options: [
+                        {t:"You would hear and see it at the same time", c:false},
+                        {t:"You would hear it first, then see it later", c:false}, 
+                        {t:"You would see it, but hear nothing at all", c:true},
+                        {t:"You would neither see nor hear anything", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which real-life observation directly supports the classification of waves based on medium requirement?", 
+                        options: [
+                        {t:"Waves become weaker as they travel farther away", c:false},
+                        {t:"Voices cannot be heard in space, but signals still work", c:true}, 
+                        {t:"All waves move faster in solids than in gases", c:false},
+                        {t:"Light always travels in straight lines", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                
+                ]
+            },
+            {
+                title: "Explaining Waves",
+                discussion: {
+                    en: "<strong><i>Part A. Sound Waves</i></strong><br>Looking closer at Mechanical Waves, they move in two ways: First, <b>transverse</b> - where particles move up and down like ocean waves.<br><br>[media-1]<br><br> Second, <b>Longitudinal</b> - where particles move back and forth in compression, just like sound waves. <br><br> [media-2]<br><br> Speaking of sound, it is produced purely by vibrations. It travels fastest in solids because the molecules are close together, and slowest in gases. Remember, the pitch of a sound depends on its frequency, while the loudness depends on the amplitude. This is how we hear: vibrations enter the ear, hit the eardrum, and send signals to our brain.<br><br>[media-16]<br>[media-0] <br><br><br> <strong><i>Part B. Light Waves</i></strong> <br>Now, let us talk about Light. <b>Light</b> is a form of electromagnetic radiation that travels in straight lines.<br><br>[media-3]<br><br> It has unique behaviors: it can bounce off objects which is called <b>reflection</b>, bend when entering different materials which is <b>refraction</b>, or be taken in which is <b>absorption</b>.<br><br>[media-4]<br>[media-5]<br>[media-6]<br> What we see as white light is actually a mixture of all colors. The process of sight happens when light enters our eyes, the lens focuses it on the retina, and converts it into signals that our brain interprets. <br><br>[media-17]<br><br><br><strong><i>Part C. Electromagnetic Waves</i></strong><br>All electromagnetic waves are arranged according to their energy and frequency in what we call the Electromagnetic Spectrum.<br><br>[media-7]<br>[media-8]<br><br> On the low energy end, we have Radio waves, Microwaves, and Infrared. In the middle is Visible Light—the only part we can actually see. On the high energy end, we have Ultraviolet, X-rays, and Gamma rays. <br><br>[media-18]<br>[media-9]<br>[media-10]<br>[media-11]<br>[media-12]<br>[media-13]<br>[media-14]<br>[media-15]<br><br>The rule here is simple: the higher the frequency, the higher the energy, which means they are also more powerful and potentially dangerous.",
+                    fil: "[media-0]<br>[media-1]<br>[media-2]<br>[media-3]<br>[media-4]<br>[media-5]<br>[media-6]<br>[media-7]<br>[media-8]<br>[media-9]<br>[media-10]<br>[media-11]<br>[media-12]<br>[media-13]<br>[media-14]<br>[media-15]<br>[media-16]<br>[media-17]<br>[media-18]"
+                },
+                    assets: [
+                {type: 'image', url: 'https://i.imgur.com/4PIYQNM.gif', title: 'Sound Waves'},
+                {type: 'image', url: 'https://i.imgur.com/GWKbOcS.gif', title: 'Transverse Wave'},
+                {type: 'image', url: 'https://i.imgur.com/6lmyuUB.gif', title: 'Longitudinal Wave'},
+                {type: 'image', url: 'https://i.imgur.com/tv1ps6S.jpg', title: 'Light Wave'},
+                {type: 'image', url: 'https://i.imgur.com/eXJgDWE.gif', title: 'Reflection of Light Wave'},
+                {type: 'image', url: 'https://i.imgur.com/LQTwPHi.gif', title: 'Refraction of Light Wave'},
+                {type: 'image', url: '', title: 'Absorption of Light Wave'},
+                {type: 'image', url: 'https://i.imgur.com/j1rengy.gif', title: 'Electromagnetic Wave Structure'},
+                {type: 'image', url: 'https://i.imgur.com/xG92Ru8.jpg', title: 'Range of Electromagnetic Waves'},
+                {type: 'image', url: 'https://i.imgur.com/Ecrkv3G.gif', title: 'Radio Waves'},
+                {type: 'image', url: 'https://i.imgur.com/i4VhS04.gif', title: 'Microwave'},
+                {type: 'image', url: 'https://i.imgur.com/NoQ5wkZ.gif', title: 'Infrared'},
+                {type: 'image', url: 'https://i.imgur.com/ojbmdf4.gif', title: 'Visible Light'},
+                {type: 'image', url: 'https://i.imgur.com/OOtdKq6.gif', title: 'Ultra Violet Waves'},
+                {type: 'image', url: 'https://i.imgur.com/tJftL1w.gif', title: 'X-ray'},
+                {type: 'image', url: 'https://i.imgur.com/m62l6Qv.gif', title: 'Gamma Ray'},
+                        { type: 'video', url: 'https://www.youtube.com/embed/XLfQpv2ZRPU', title: 'Sound Waves'},
+                        { type: 'video', url: 'https://www.youtube.com/embed/9Vsl0Iom3S0', title: 'Light Waves'},
+                        { type: 'video', url: 'https://www.youtube.com/embed/508ZsmsIlno', title: 'Electromagnetic Spectrum'},
+                
+                ],
+                references: ["Let’s talk about the phenomenon of sound / Propagation — Hive. (2019). Hive.blog; Hive. https://hive.blog/hive-122108/@rbalzan79/let-s-talk-about-the-phenomenon-of-sound-propagation", "Astronomy animations Lalith Perera. (2026). Olemiss.edu. http://www.phy.olemiss.edu/~perera/animations/waves.html", "9 Best Examples Of Longitudinal Waves In Everyday Life. (2020, September 12). RankRed. https://www.rankred.com/best-examples-of-longitudinal-waves/", "energy. (2020, November 13). Kofa Study. https://www.kofastudy.com/courses/jss3-basic-science-2nd-term/lessons/light-energy-week-1/topic/how-light-travels/", "Light Reflection GIF - Light Reflection Refraction - Discover & Share GIFs. (2021, March 6). Tenor. https://tenor.com/view/light-reflection-refraction-mirror-physics-gif-20641064", "Analysis of a light beam refracted by a glass plate — Steemit. (2025). Steemit.com; Steemit. https://steemit.com/project-hope/@rbalzan79/analysis-of-a-light-beam-refracted-by-a-glass-plate", "", "Waves of the Electromagnetic Spectrum. (2021). Stickmanphysics.com. https://stickmanphysics.com/stickman-physics-home/electromagnetic-waves/waves-of-the-electromagnetic-spectrum/", "https://youtu.be/XLfQpv2ZRPU?si=d8P0t0rvbH2Qm-qS", "https://youtu.be/9Vsl0Iom3S0?feature=shared", "https://youtu.be/508ZsmsIlno?si=FHAhj3zs82HYx-z_"],
+                questions: [
+                { q: "When you see ocean waves rising and falling as they move toward the shore, what specific type of mechanical wave is shown here?", 
+                        options: [
+                        {t:"Longitudinal wave", c:false},
+                        {t:"Electromagnetic wave", c:false}, 
+                        {t:"Transverse wave", c:true},
+                        {t:"Compressional wave", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "When a guitar string is plucked, it vibrates and produces sound. How do the air particles move as the sound travels to your ear?", 
+                        options: [
+                        {t:"They move in circles continuously", c:false},
+                        {t:"They move up and down only", c:false}, 
+                        {t:"They move back and forth forming compressions", c:true},
+                        {t:"They travel from the guitar directly to your ear", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You tap one end of a long metal table, and a friend at the other end hears the sound clearly and quickly. In which material does sound travel fastest based on this example?", 
+                        options: [
+                        {t:"Solid", c:true},
+                        {t:"Liquid", c:false}, 
+                        {t:"Gas", c:false},
+                        {t:"Vacuum", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "A thin glass creates a high, sharp sound when tapped, while a thick glass creates a low, deep sound. Which property of sound determines this difference?", 
+                        options: [
+                        {t:"Amplitude", c:false},
+                        {t:"Speed", c:false}, 
+                        {t:"Frequency", c:true},
+                        {t:"Wavelength", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You adjust the volume of your radio to make the music louder or softer. Which characteristic of sound are you changing?", 
+                        options: [
+                        {t:"Frequency", c:false},
+                        {t:"Wavelength", c:false}, 
+                        {t:"Amplitude", c:true},
+                        {t:"Speed", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "When you look at yourself in a mirror and see your own image, what behavior of light is taking place?", 
+                        options: [
+                        {t:"Refraction", c:false},
+                        {t:"Absorption", c:false}, 
+                        {t:"Reflection", c:true},
+                        {t:"Dispersion", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "A spoon placed in a glass of water looks bent or broken at the water line. What behavior of light explains this?", 
+                        options: [
+                        {t:"Reflection", c:false},
+                        {t:"Refraction", c:true}, 
+                        {t:"Absorption", c:false},
+                        {t:"Transmission", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "A black shirt feels very hot under the sun because it takes in most of the sunlight hitting it. What behavior of light is shown here?", 
+                        options: [
+                        {t:"Absorption", c:true},
+                        {t:"Reflection", c:false}, 
+                        {t:"Refraction", c:false},
+                        {t:"Scattering", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "When sunlight passes through raindrops, it forms a rainbow showing red, orange, yellow, green, blue, indigo, and violet. What does this prove about white light?", 
+                        options: [
+                        {t:"It is only one color", c:false},
+                        {t:"It is pure heat energy", c:false}, 
+                        {t:"It is a mixture of all visible colors", c:true},
+                        {t:"It is a type of mechanical wave", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which part of the Electromagnetic Spectrum is the ONLY type that human eyes can detect and see directly?", 
+                        options: [
+                        {t:"Infrared rays", c:false},
+                        {t:"Ultraviolet rays", c:false}, 
+                        {t:"Visible light", c:true},
+                        {t:"Radio waves", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "TV stations send signals to your home so you can watch shows. Which group of electromagnetic waves is used for this purpose?", 
+                        options: [
+                        {t:"Radio waves", c:true},
+                        {t:"X-rays", c:false}, 
+                        {t:"Gamma rays", c:false},
+                        {t:"Ultraviolet rays", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You use a microwave oven to heat or cook food quickly. Which type of electromagnetic wave does this appliance use?", 
+                        options: [
+                        {t:"Visible light", c:false},
+                        {t:"Gamma rays", c:false}, 
+                        {t:"Microwaves", c:true},
+                        {t:"Ultraviolet rays", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "To check if you have a broken bone, a doctor takes an image using high-energy waves that can pass through soft body parts but not bones. What type of wave is this?", 
+                        options: [
+                        {t:"Infrared rays", c:false},
+                        {t:"Radio waves", c:false}, 
+                        {t:"X-rays", c:true},
+                        {t:"Visible light", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which group of electromagnetic waves has the HIGHEST energy, highest frequency, and is considered the most dangerous?", 
+                        options: [
+                        {t:"Radio waves", c:false},
+                        {t:"Visible light", c:false}, 
+                        {t:"Infrared rays", c:false},
+                        {t:"Gamma rays", c:true}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Remote controls for TVs and air conditioners send invisible signals to the device. These signals belong to which category?", 
+                        options: [
+                        {t:"Ultraviolet rays", c:false},
+                        {t:"Infrared rays", c:true}, 
+                        {t:"Microwaves", c:false},
+                        {t:"X-rays", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which statement correctly explains why sound travels slowest in gases like air compared to solids or liquids?", 
+                        options: [
+                        {t:"Gases block all vibrations completely", c:false},
+                        {t:"Gas particles are too heavy to move", c:false}, 
+                        {t:"Gas particles are far apart, so vibrations take longer to transfer", c:true},
+                        {t:"Gases turn sound into light energy", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "How exactly does the human hearing process work in the correct order?", 
+                        options: [
+                        {t:"Brain interprets → eardrum vibrates → sound enters ear", c:false},
+                        {t:"Sound enters ear → brain interprets → eardrum vibrates", c:false}, 
+                        {t:"Sound enters ear → eardrum vibrates → signals sent to brain", c:true},
+                        {t:"Eardrum vibrates → sound enters ear → signals sent to brain", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which statement best describes how human vision works?", 
+                        options: [
+                        {t:"Eyes produce light to see objects around", c:false},
+                        {t:"Light enters eyes, focused on retina, converted to signals for brain", c:true}, 
+                        {t:"Objects send signals directly to our eyes", c:false},
+                        {t:"We see only because air carries images to us", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "What is the relationship between frequency and energy across the Electromagnetic Spectrum?", 
+                        options: [
+                        {t:"Higher frequency means lower energy", c:false},
+                        {t:"Frequency and energy are not related", c:false}, 
+                        {t:"Lower frequency means more danger", c:false},
+                        {t:"Higher frequency means higher energy and more power", c:true}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "What is the main difference between mechanical transverse and longitudinal waves?", 
+                        options: [
+                        {t:"One carries energy, the other does not", c:false},
+                        {t:"One travels fast, the other always travels slow", c:false}, 
+                        {t:"Particle movement direction differs from wave movement direction", c:true},
+                        {t:"One is visible, the other is invisible", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                ]
+            },
+            {
+                title: "Applications to Real-Life",
+                discussion: {
+                    en: "These concepts are not just theories; they are the backbone of modern technology. For example, Radio and TV signals use low-energy waves to travel long distances. Musical instruments work by creating vibrations that produce specific frequencies or pitches. In medicine, we use Ultrasound, which are high-frequency sound waves, to safely view internal organs. However, to see bones, doctors use X-rays because these high-energy waves can pass through soft tissue but are blocked by hard bone. This is also why X-rays are used carefully, while ultrasound is safer for viewing babies, because sound energy does not damage cells like high-energy radiation does. Even your mobile phones and WiFi work by sending data through microwaves and radio waves.<br><br>[media-0]",
+                    fil: "[media-0]"
+                },
+                    assets: [
+                {type: 'image', url: 'https://i.imgur.com/IQnIEjF.jpg', title:'Electromagnetic Waves Applications'}
+                ],
+                references: ["The Electromagnetic Spectrum - Radio Waves And Radio Spectrum. (n.d.). BYJUS. https://byjus.com/physics/electromagnetic-spectrum-radio-waves/"],
+                questions: [
+                { q: "Radio stations transmit news and music to households far away. Which characteristic of their waves makes this possible?", 
+                        options: [
+                        {t:"High energy and short wavelength", c:false},
+                        {t:"Visible nature of the waves", c:false}, 
+                        {t:"Low energy and ability to travel long distances", c:true},
+                        {t:"Ability to pass through solid objects easily", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "When you tune a guitar string to produce a higher note, which property of the sound wave are you adjusting?", 
+                        options: [
+                        {t:"Amplitude", c:false},
+                        {t:"Frequency", c:true}, 
+                        {t:"Speed", c:false},
+                        {t:"Medium", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Doctors advise using ultrasound scans during pregnancy instead of X-rays. What is the main reason for this choice?", 
+                        options: [
+                        {t:"Ultrasound produces clearer images than X-rays", c:false},
+                        {t:"Ultrasound energy does not damage living cells", c:true}, 
+                        {t:"Ultrasound machines are cheaper and easier to use", c:false},
+                        {t:"Ultrasound works without touching the body", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "A dentist takes an image of your teeth to check for cavities. Why does the image show teeth as white areas while gums appear dark?", 
+                        options: [
+                        {t:"Gums absorb the waves completely", c:false},
+                        {t:"Teeth reflect the waves away", c:false}, 
+                        {t:"X-rays are blocked by hard tissues like teeth and bones", c:true},
+                        {t:"Soft tissues glow when hit by these waves", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "You connect your phone to home WiFi to browse the internet. Which type of wave is used to send this data wirelessly?", 
+                        options: [
+                        {t:"Sound waves", c:false},
+                        {t:"Ultraviolet rays", c:false}, 
+                        {t:"Microwaves", c:true},
+                        {t:"Visible light", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which statement correctly explains why X-ray machines in hospitals have protective lead shields around them?", 
+                        options: [
+                        {t:"High-energy waves can cause damage to body cells over time", c:true},
+                        {t:"Lead helps the machine produce clearer pictures", c:false}, 
+                        {t:"Shields prevent the waves from reaching the patient", c:false},
+                        {t:"X-rays create heat that needs to be contained", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "An orchestra creates different sounds using drums, flutes, and violins. What common principle allows all these instruments to produce music?", 
+                        options: [
+                        {t:"They all use air as their only medium", c:false},
+                        {t:"Sound is generated by controlled vibrations", c:true}, 
+                        {t:"They produce waves with the same frequency", c:false},
+                        {t:"All travel at exactly the same speed", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Radio waves and microwaves are both used for communication. How do they differ in application?", 
+                        options: [
+                        {t:"Radio waves cover long ranges; microwaves suit short-range high-data transfer", c:true},
+                        {t:"Radio waves are visible; microwaves are invisible", c:false}, 
+                        {t:"Microwaves need a medium; radio waves do not", c:false},
+                        {t:"Radio waves have higher energy than microwaves", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Which real-life application relies on the ability of waves to be reflected or bounced back to form an image?", 
+                        options: [
+                        {t:"Radio broadcasting", c:false},
+                        {t:"Ultrasound imaging", c:true}, 
+                        {t:"Mobile signal transmission", c:false},
+                        {t:"Sunlight heating the Earth", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                { q: "Why are high-frequency waves like Ultraviolet or Gamma rays never used for regular broadcasting?", 
+                        options: [
+                        {t:"They travel too slowly through space", c:false},
+                        {t:"They cannot travel very far at all", c:false}, 
+                        {t:"Their high energy makes them dangerous to living things", c:true},
+                        {t:"They require very large equipment to work", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                ]
+            },    
+             {
+                title: "Conclusion",
+                discussion: {
+                    en: "In summary, waves serve as carriers of energy without transporting matter, and they are broadly classified into mechanical waves such as sound that require a medium to travel, and electromagnetic waves such as light that can propagate through a vacuum. Mechanical waves move either in transverse or longitudinal forms, with sound traveling fastest in solids due to closely packed molecules, while its properties like pitch and loudness are determined by frequency and amplitude respectively. Light demonstrates distinct behaviors including reflection, refraction, and absorption, and white light is actually a combination of all visible colors. Arranged from low to high energy, the Electromagnetic Spectrum ranges from radio waves and microwaves to visible light, ultraviolet rays, X-rays, and gamma rays, following the principle that higher frequency means greater energy and potential risk. These principles are essential to everyday innovations, enabling applications from musical instruments and medical imaging technologies like ultrasound and X-rays, to wireless communication systems used in mobile phones and broadcasting, proving that the physics of waves and optics form the foundation of how we perceive the world and advance modern technology.",
+                    fil: ""
+                },
+                    assets: [
+                ],
+                references: [],
+                questions: [
+                { q: "An astronaut is repairing a satellite outside a space station. She wants to communicate with another astronaut standing just 2 meters away. Why can they not hear each other directly even though they are close together?", 
+                        options: [
+                        {t:"Sound waves lose energy too quickly over short distances", c:false},
+                        {t:"Sound is a mechanical wave and requires a medium to propagate", c:true}, 
+                        {t:"Low pressure in space reduces the frequency of sound below hearing range", c:false},
+                        {t:"Vibrations from their suits interfere with the transmission of sound", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "During a storm, you observe lightning first and hear thunder several seconds later. If both events occurred at the exact same moment, what does this observation demonstrate regarding wave properties?", 
+                        options: [
+                        {t:"Mechanical waves travel faster than electromagnetic waves", c:false},
+                        {t:"Electromagnetic waves propagate independently of a medium while mechanical waves do not", c:false}, 
+                        {t:"Visible light has lower frequency but greater speed compared to sound", c:true},
+                        {t:"Energy content determines travel speed regardless of wave classification", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "A guitarist presses a string against the fretboard to produce a higher musical note. How does this action specifically alter the properties of the wave produced?", 
+                        options: [
+                        {t:"It increases the amplitude, raising the pitch", c:false},
+                        {t:"It shortens the vibrating length, increasing frequency", c:true}, 
+                        {t:"It changes the wave type from longitudinal to transverse", c:false},
+                        {t:"It reduces wave speed while keeping wavelength constant", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "You are holding one end of a coiled spring while a friend holds the other. You move your hand up and down repeatedly. Which classification and particle motion accurately describes the wave generated?", 
+                        options: [
+                        {t:"Longitudinal; particles move parallel to wave direction", c:false},
+                        {t:"Mechanical transverse; particles move perpendicular to wave direction", c:true}, 
+                        {t:"Electromagnetic transverse; particles oscillate in circular paths", c:false},
+                        {t:"Longitudinal; particles remain completely stationary", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "A sound signal is sent simultaneously through air, fresh water, and steel. In which sequence will the signal be detected from first to last, and what principle explains this?", 
+                        options: [
+                        {t:"Air → Water → Steel; speed decreases as density increases", c:false},
+                        {t:"Steel → Water → Air; closer molecular arrangement facilitates faster energy transfer", c:true}, 
+                        {t:"Water → Steel → Air; liquid medium carries vibrations best", c:false},
+                        {t:"All arrive at the same time; speed is constant for sound waves", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "On a bright sunny day, wearing a black shirt makes you feel much warmer than wearing a white shirt. Which behavior of light best explains this difference?", 
+                        options: [
+                        {t:"Black light has higher energy content than white light", c:false},
+                        {t:"White fabric refracts light while black fabric reflects it", c:false}, 
+                        {t:"Black surfaces absorb most wavelengths of light and convert them to heat", c:true},
+                        {t:"White surfaces scatter light in all directions before it reaches the fabric", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "When a pencil is placed inside a glass filled with water, it appears bent or broken at the boundary between air and water. What is the precise cause of this optical illusion?", 
+                        options: [
+                        {t:"Reflection of light off the glass surface", c:false},
+                        {t:"Absorption of certain color wavelengths", c:false}, 
+                        {t:"Refraction caused by speed change when moving between media", c:true},
+                        {t:"Diffraction spreading the light rays outward", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "A photographer uses a red filter over their camera lens. If aimed at a white flower, why does the flower appear red in the resulting image?", 
+                        options: [
+                        {t:"The filter adds red color to the light passing through it", c:false},
+                        {t:"White light is composed of all colors; only red wavelengths are transmitted", c:true}, 
+                        {t:"The filter absorbs red light and reflects other colors", c:false},
+                        {t:"White objects naturally emit red light under lenses", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Remote controls for televisions operate using signals invisible to human eyes. These signals belong to which region of the electromagnetic spectrum and why are they chosen for this use?", 
+                        options: [
+                        {t:"Ultraviolet; high energy ensures strong signal", c:false},
+                        {t:"Infrared; low energy, safe, and suitable for short-range transmission", c:true}, 
+                        {t:"X-rays; ability to penetrate plastic casing", c:false},
+                        {t:"Visible light; easily generated by LEDs", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Hospitals use gamma rays to sterilize medical equipment even though they are highly energetic. What property makes them suitable for this purpose compared to radio waves?", 
+                        options: [
+                        {t:"Gamma rays travel faster than radio waves", c:false},
+                        {t:"Gamma rays possess higher frequency and greater penetrating power", c:true}, 
+                        {t:"Radio waves change direction easily inside containers", c:false},
+                        {t:"Gamma rays are visible to microorganisms", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Why do dentists use X-rays to detect cavities rather than microwaves or visible light?", 
+                        options: [
+                        {t:"X-rays are cheaper to produce than other waves", c:false},
+                        {t:"X-rays are partially absorbed by dense materials but pass through soft tissue", c:true}, 
+                        {t:"Visible light reflects off teeth creating glare", c:false},
+                        {t:"Microwaves would heat up the patient’s mouth", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "A mobile phone connects to the internet via WiFi. Which type of electromagnetic wave is utilized and what is its position relative to visible light?", 
+                        options: [
+                        {t:"Radio waves; higher frequency than violet light", c:false},
+                        {t:"Microwaves; lower frequency and energy than visible light", c:true}, 
+                        {t:"Infrared; same energy level as red light", c:false},
+                        {t:"Ultraviolet; slightly above visible spectrum", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Why is ultrasound preferred over X-ray imaging during pregnancy check-ups?", 
+                        options: [
+                        {t:"Ultrasound produces higher resolution images", c:false},
+                        {t:"Ultrasound uses mechanical waves without high-energy radiation risk", c:true}, 
+                        {t:"X-rays are blocked by the mother’s skin", c:false},
+                        {t:"Ultrasound equipment is smaller and portable", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Sunlight takes approximately 8 minutes and 20 seconds to reach Earth. This observation directly supports which statement about electromagnetic waves?", 
+                        options: [
+                        {t:"They require gas particles for maximum speed", c:false},
+                        {t:"They can propagate through a vacuum", c:true}, 
+                        {t:"Their speed varies with distance traveled", c:false},
+                        {t:"Visible light has the slowest speed in the spectrum", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "In a concert hall, walls and ceilings are often covered with soft, porous materials. Which wave behavior are designers trying to control to improve sound quality?", 
+                        options: [
+                        {t:"Reflection", c:true},
+                        {t:"Refraction", c:false}, 
+                        {t:"Polarization", c:false},
+                        {t:"Diffraction", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "If you increase the volume on a speaker, which physical characteristic of the sound wave is being modified, and how does it relate to perception?", 
+                        options: [
+                        {t:"Frequency; determines pitch", c:false},
+                        {t:"Amplitude; determines loudness", c:true}, 
+                        {t:"Wavelength; determines speed", c:false},
+                        {t:"Phase; determines quality", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Why are radio waves selected for national broadcasting networks instead of ultraviolet or gamma rays?", 
+                        options: [
+                        {t:"Radio waves have the highest energy", c:false},
+                        {t:"Radio waves are less dangerous and travel great distances", c:true}, 
+                        {t:"Radio waves can be seen by humans", c:false},
+                        {t:"Radio waves require no equipment to detect", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "Which sequence correctly orders electromagnetic waves from lowest to highest energy?", 
+                        options: [
+                        {t:"Radio → Visible → Microwave → X-ray", c:false},
+                        {t:"Radio → Microwave → Visible → Ultraviolet → Gamma", c:true}, 
+                        {t:"Infrared → Radio → Visible → Gamma", c:false},
+                        {t:"Visible → Infrared → Ultraviolet → X-ray", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "When white light passes through a glass prism, it separates into a rainbow of colors. This phenomenon occurs because:", 
+                        options: [
+                        {t:"Each color travels at a different speed inside the glass", c:true},
+                        {t:"The prism adds color pigments to the light", c:false}, 
+                        {t:"Reflection occurs differently for each wavelength", c:false},
+                        {t:"Light changes from electromagnetic to mechanical inside glass", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                 { q: "You shine a flashlight into a dark room and see the beam travel in a straight path until it hits the wall. This observation verifies which fundamental property of light?", 
+                        options: [
+                        {t:"Light always refracts toward the normal", c:false},
+                        {t:"Light travels in straight lines under uniform conditions", c:true}, 
+                        {t:"Light behaves as a longitudinal wave", c:false},
+                        {t:"Light speed is infinite in air", c:false}                       
+                        ], 
+                        answered: false, userCorrect: false, selectedIndex: null },
+                ]
+            },
+        ];
+
+        function shuffle(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        const sessionSlides = slides.map(s => ({
+            ...s,
+            questions: shuffle(s.questions.map(q => ({ ...q, options: shuffle(q.options) })))
+        }));
+
+        let currentIndex = 0;
+        let tapCount = 0;
+        let tapTimer = null;
+        let currentLang = 'en';
+
+        function renderView(view) {
+            window.speechSynthesis.cancel(); // Stop audio when changing views
+            const container = document.getElementById('main-content');
+            if (view === 'home') {
+                container.innerHTML = `<h1>WAVES AND OPTICS</h1><br><br><div class="home-content">This learning material aims to cognitively distinguish between mechanical and electromagnetic waves, classify mechanical waves into transverse and longitudinal types, and explain the properties and behaviors of sound and light waves, as well as describe the arrangement, characteristics, and applications of each region in the Electromagnetic Spectrum. It intends to affectively develop awareness of safety precautions when using high-energy electromagnetic radiation, value the role of scientific principles in advancing medical technology and communication systems, and recognize the significance of wave phenomena in understanding how humans perceive the environment. It also seeks to psychomotorically differentiate wave types based on their ability to travel through a medium or vacuum, analyze the relationship between frequency, energy, and potential effects of waves, and apply concepts of reflection, refraction, and absorption in explaining natural occurrences and designing useful technologies.<br><br>Artificial Intelligence was utilized to assist in refining grammar, ensuring clarity, and enhancing language accuracy to facilitate better learning.<br><br>It is important to note that this work is protected intellectual property; sharing, distributing, or reproducing any part of this material without the explicit permission of the creator and the institution is strictly prohibited and may result in legal and disciplinary consequences.</div>`;
+            } 
+            else if (view === 'about') {
+                container.innerHTML = `<h1>About Us</h1><br><br><div class="about-content">The creator of this material is dedicated to producing high-quality educational resources that make learning Science accessible and engaging. The content is designed to guide students in mastering key concepts through clear explanations and interactive visual aids. The creator of this material utilizes modern technology, including Artificial Intelligence, to ensure clarity, proper grammar, and effective communication throughout the content. The creator of this material upholds the values of academic integrity, originality, and respect for intellectual property rights.<br><br>If you have any questions, you may contact us through: <b>vertudazojr9@gmail.com</b></div>`;
+            } 
+            else if (view === 'references') {
+                let allRefs = [];
+                sessionSlides.forEach(slide => {
+                    slide.references.forEach(ref => {
+                        if (!allRefs.includes(ref)) allRefs.push(ref);
+                    });
+                });
+                container.innerHTML = `
+                    <h1>References</h1>
+                    <div class="references-page-box">
+                        <ul id="ref-list">${allRefs.map(r => `<li>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            }
+            else if (view === 'lesson') renderLesson();
+        }
+
+
+        
+        function renderLesson() {
+    const container = document.getElementById('main-content');
+    const slide = sessionSlides[currentIndex];
+    
+    // 1. Get the current raw text content
+    let textContent = typeof slide.discussion === 'object' ? slide.discussion[currentLang] : slide.discussion;
+    
+    // 2. Safely swap media placeholders [media-0], [media-1], etc., into HTML structures natively inside the text
+    if (slide.assets && slide.assets.length > 0) {
+        slide.assets.forEach((asset, index) => {
+            let assetHtml = '';
+            if (asset.type === 'video') {
+            assetHtml = `
+                <div class="media-container">
+                    <iframe src="${asset.url}" frameborder="0" allowfullscreen></iframe>
+                    ${asset.title ? `<div style="text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 0.9rem; font-style: italic;">${asset.title}</div>` : ''}
+                </div>`;
+            } else if (asset.type === 'image') {
+                assetHtml = `
+                    <div class="media-container">
+                        <img src="${asset.url}" alt="Slide Visual">
+                        ${asset.title ? `<div style="text-align: center; padding: 10px; background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 0.9rem; font-style: italic;">${asset.title}</div>` : ''}
+                    </div>`;
+            }
+            
+            // Replace the placeholder string with the true visual object markup
+            textContent = textContent.replace(`[media-${index}]`, assetHtml);
+        });
+    }
+    
+    const musicLabel = userWantsMusic ? 'PAUSE' : 'PLAY';
+            
+    container.innerHTML = `
+        <div id="lesson-scoreboard" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="setLanguageAndRead('en')" style="background: #3b82f6; color: white; padding: 8px 12px; font-size: 0.9rem;">ENGLISH</button>
+                <button onclick="setLanguageAndRead('fil')" style="background: #10b981; color: white; padding: 8px 12px; font-size: 0.9rem;">FILIPINO</button>
+            </div>
+                        
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                <button id="music-toggle-btn" class="music-btn" onclick="toggleBackgroundMusic()">${musicLabel}</button>
+                <div style="font-size: 0.85rem; opacity: 0.9;">
+                    Overall: <span id="overall-score">${calculateTotalScore()}</span> | 
+                    Section: <span id="section-score">${calculateSectionScore()}</span>
+                </div>
+            </div>
+        </div>
+
+        <h1>${slide.title}</h1>
+        
+        <div class="discussion-box" onclick="handleTap(sessionSlides[currentIndex].discussion)">
+            <div id="discussion-text" style="font-size: 1.25rem; line-height: 1.6; color: black;">
+                ${textContent}
+            </div>
+        </div>
+
+        <div id="questions-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleQuestions()">&times;</span>
+        <h2 style="color: var(--text-color)">Section Quiz</h2>
+        <div id="questions-section"></div>
+    </div>
+    </div>
+
+        <div style="display:flex; justify-content:center; gap:20px; margin-top:20px;">
+            <button onclick="prevSlide()">Previous</button>
+            <button onclick="nextSlide()">Next</button>
+            <button class="push-right" onclick="toggleQuestions()" style="background: #facc15; color: #064e3b;">Show Questions</button>
+        </div>
+    `;
+    renderQuestions();
+}
+
+    
+    
+
+        // --- TTS and Tap Logic ---  
+    function stripHtml(html) {
+            return html.replace(/<[^>]*>/g, ' ');
+        }
+
+        
+    function playSpeech(text) {
+    // 1. Check if already speaking: If yes, cancel and resume music
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        if (userWantsMusic && ytPlayer) {
+            ytPlayer.playVideo();
+        }
+        return;
+    }
+
+    // 2. Extract and Clean Text
+    let rawText = typeof text === 'object' ? text[currentLang] : text;
+    
+    // FIX: Remove HTML tags only, preserve Filipino punctuation and structure
+    let cleanText = stripHtml(rawText)
+        .replace(/\[media-\d+\]/gi, '')
+        .replace(/\[.*?\]/g, '') // Remove [bracketed annotations]
+        .replace(/\s+/g, ' ')    // Collapse extra spaces
+        .trim();
+
+    if (!cleanText) return;
+        
+        if (ytPlayer && userWantsMusic) {
+        ytPlayer.pauseVideo();
+    }
+
+    // 3. Setup Utterance
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // 4. Voice & Accent Logic - FIXED for Filipino
+    const voices = window.speechSynthesis.getVoices();
+    
+    if (currentLang === 'fil') {
+        return;
+        
+    } else {
+        // English settings
+        const englishVoice = voices.find(voice => 
+            voice.lang.includes('en-US') || 
+            voice.lang.includes('en-GB')
+        );
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+    }
+
+    utterance.volume = 1.0;
+
+    // 5. Music Integration
+    if (ytPlayer && userWantsMusic) {
+        ytPlayer.pauseVideo();
+    }
+
+    // 6. Event Listeners
+    utterance.onend = function() {
+        if (userWantsMusic && ytPlayer) {
+            ytPlayer.playVideo();
+        }
+    };
+
+    utterance.onerror = function(event) {
+        console.error("TTS Error:", event.error);
+        if (userWantsMusic && ytPlayer) {
+            ytPlayer.playVideo();
+        }
+    };
+
+    // 7. Execute
+    window.speechSynthesis.speak(utterance);
+}
+    
+
+        function setLanguageAndRead(lang) {
+            window.speechSynthesis.cancel();
+            currentLang = lang;
+            renderLesson();
+    }
+        
+        function handleTap(text) {
+        }
+
+    function renderQuestions() {
+    const qContainer = document.getElementById('questions-section');
+    const slide = sessionSlides[currentIndex];
+    qContainer.innerHTML = '';
+    
+    // Safety check if slide doesn't have valid questions or contains empty data structures
+    if (!slide.questions || slide.questions.length === 0 || !slide.questions[0].q) {
+        qContainer.innerHTML = '<p style="font-style: italic; opacity: 0.7;">No questions for this section.</p>';
+        return;
+    }
+
+    slide.questions.forEach((q, qIndex) => {
+        const optionsText = q.options.map((opt, i) => `Option ${i + 1}: ${opt.t}`).join('. ');
+        const fullSpeechText = `${q.q}. ${optionsText}`;
+        
+        qContainer.innerHTML += `
+            <div class="question-block">
+                <p onclick="playSpeech('${fullSpeechText.replace(/'/g, "\\'")}')" style="cursor: pointer;">
+                    <strong>Q${qIndex + 1}:</strong> ${q.q} 
+                    <span style="font-size: 0.8rem; color: green; display: block;">(Tap to hear question)</span>
+                </p>
+                <div class="options-grid">
+                    ${q.options.map((opt, optIndex) => {
+                        let statusClass = '';
+                        
+                        // Apply classes once the question has been answered
+                        if (q.answered) {
+                            if (opt.c) {
+                                // Correct choice is ALWAYS highlighted green
+                                statusClass = 'correct-choice';
+                            } else if (q.selectedIndex === optIndex && !opt.c) {
+                                // If the user clicked this choice and it's wrong, highlight it red
+                                statusClass = 'incorrect-choice';
+                            }
+                        }
+                        
+                        return `
+                            <button class="${statusClass}" 
+                                    ${q.answered ? 'disabled' : ''} 
+                                    onclick="checkAnswer(${qIndex}, ${optIndex})">
+                                ${opt.t}
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    });
+}
+
+function checkAnswer(qIdx, optIdx) {
+    const slide = sessionSlides[currentIndex];
+    const question = slide.questions[qIdx];
+    
+    question.answered = true;
+    question.selectedIndex = optIdx;
+    question.userCorrect = question.options[optIdx].c;
+    
+    // Instantly refresh the UI to apply the colors instead of raising an alert window box
+    renderQuestions();
+    updateScoreUI();
+}
+
+        function calculateSectionScore() {
+            const slide = sessionSlides[currentIndex];
+            const correct = slide.questions.filter(q => q.userCorrect).length;
+            return `${correct}/${slide.questions.length}`;
+        }
+
+        function calculateTotalScore() {
+            let correct = 0; let total = 0;
+            sessionSlides.forEach(s => s.questions.forEach(q => { total++; if(q.userCorrect) correct++; }));
+            return `${correct}/${total}`;
+        }
+
+        function updateScoreUI() {
+            const overall = document.getElementById('overall-score');
+            const section = document.getElementById('section-score');
+            if(overall) overall.innerText = calculateTotalScore();
+            if(section) section.innerText = calculateSectionScore();
+        }
+
+        function toggleQuestions() {
+    const modal = document.getElementById('questions-modal');
+    const qSection = document.getElementById('questions-section');
+    
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+    } else {
+        modal.style.display = 'block';
+        qSection.style.display = 'block'; // Ensure internal container is visible
+    }
+}
+
+        function nextSlide() { 
+            window.speechSynthesis.cancel();
+            if(currentIndex < sessionSlides.length - 1) { currentIndex++; renderLesson(); } 
+        }
+        function prevSlide() { 
+            window.speechSynthesis.cancel();
+            if(currentIndex > 0) { currentIndex--; renderLesson(); } 
+        }
+
+        renderView('home');
+    
+    
+    
+    
+    // --- YOUTUBE PLAYLIST & PLAYER CONFIGURATION ---
+// You can add as many YouTube Video IDs in this array as you'd like
+const musicPlaylist = [
+    'UAQ3XLvu4gc', // Example Video ID 1
+    'oMIpcfurG1Q', // Example Video ID 2
+    'G-x-UwXccEw'  // Example Video ID 3
+];
+
+let ytPlayer;
+let currentTrackIndex = 0;
+let userWantsMusic = false; // Tracks if the user toggled music "On"
+
+// Load the YouTube IFrame Player API asynchronously
+(function() {
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+})();
+
+// This function is automatically called by the YT API when ready
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-background-player', {
+        height: '0',
+        width: '0',
+        videoId: musicPlaylist[currentTrackIndex],
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    // Player is loaded and ready.
+}
+
+// Automatically loops/plays the next track when the current one ends
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED) {
+        currentTrackIndex = (currentTrackIndex + 1) % musicPlaylist.length;
+        ytPlayer.loadVideoById(musicPlaylist[currentTrackIndex]);
+    }
+}
+
+// Toggle play/pause music manually via the button
+function toggleBackgroundMusic() {
+    if (!ytPlayer) return;
+    
+    const btn = document.getElementById('music-toggle-btn');
+    
+    if (userWantsMusic) {
+        // Pause the music
+        ytPlayer.pauseVideo();
+        userWantsMusic = false;
+        if (btn) btn.innerHTML = 'PLAY'; // Play icon indicator
+    } else {
+        // Start playing
+        ytPlayer.playVideo();
+        userWantsMusic = true;
+        if (btn) btn.innerHTML = 'PAUSE'; // Pause icon indicator
+    }
+}
+    </script>
+</body>
+</html>
